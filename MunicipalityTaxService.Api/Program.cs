@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using MunicipalityTaxService.Infrastructure.Configurations;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,11 +11,15 @@ builder.Services.AddControllers()
 builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi();
 
+builder.Services.AddInfrastructure(builder.Configuration);
+
 var app = builder.Build();
 
 app.MapOpenApi();
 app.MapScalarApiReference();
 app.UseHttpsRedirection();
 app.MapControllers();
+
+await app.Services.ApplyMigrationsAsync();
 
 app.Run();

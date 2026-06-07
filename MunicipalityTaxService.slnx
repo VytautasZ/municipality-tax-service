@@ -6,4 +6,5 @@
     <Build Solution="Debug|*" Project="false" />
   </Project>
   <Project Path="MunicipalityTaxService.Api/MunicipalityTaxService.Api.csproj" />
+  <Project Path="MunicipalityTaxService.Infrastructure/MunicipalityTaxService.Infrastructure.csproj" />
 </Solution>
