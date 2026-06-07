@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using MunicipalityTaxService.Application.Configuration;
 using MunicipalityTaxService.Infrastructure.Configurations;
 using Scalar.AspNetCore;
 
@@ -12,6 +13,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi();
 
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
 
 var app = builder.Build();
 

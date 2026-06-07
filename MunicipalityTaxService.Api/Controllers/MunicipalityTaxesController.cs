@@ -2,7 +2,7 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using MunicipalityTaxService.Api.Dtos;
 using MunicipalityTaxService.Api.Mappers;
-using MunicipalityTaxService.Domain.Entities;
+using MunicipalityTaxService.Application.Interfaces;
 
 namespace MunicipalityTaxService.Api.Controllers;
 
@@ -35,17 +35,10 @@ public class MunicipalityTaxesController(ITaxRateService taxRateService) : Contr
         [FromQuery] DateTime date,
         CancellationToken cancellationToken)
     {
-        var taxRate = await taxRateService.GetApplicableTaxRateAsync(name, date, cancellationToken);
+        var taxRate = await taxRateService.GetMunicipalityTaxRateAsync(name, date, cancellationToken);
 
         return taxRate is not null
             ? Ok(TaxRateMapper.ToDto(name, taxRate))
             : NotFound();
     }
-}
-
-// TODO: Implement ITaxRateService in the application layer, and register it in the dependency injection container and remove Domain project reference.
-
-public interface ITaxRateService
-{
-    Task<TaxRate?> GetApplicableTaxRateAsync(string name, DateTime date, CancellationToken cancellationToken);
 }
