@@ -2,6 +2,7 @@
   <Folder Name="/tests/">
     <Project Path="tests/MunicipalityTaxService.UnitTests/MunicipalityTaxService.UnitTests.csproj" />
   </Folder>
+  <Project Path="MunicipalityTaxService.Application/MunicipalityTaxService.Application.csproj" />
   <Project Path="MunicipalityTaxService.Domain/MunicipalityTaxService.Domain.csproj">
     <Build Solution="Debug|*" Project="false" />
   </Project>
