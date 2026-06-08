@@ -21,6 +21,11 @@ public sealed class TaxRateService : ITaxRateService
         return await _taxRateRepository.AddTaxRateAsync(taxRate, cancellationToken);
     }
 
+    public Task<bool> UpdateTaxRateAsync(long id, TaxRate taxRate, CancellationToken cancellationToken)
+    {
+        return _taxRateRepository.UpdateTaxRateAsync(id, taxRate, cancellationToken);
+    }
+
     public async Task<TaxRate?> GetMunicipalityTaxRateByDateAsync(string municipalityName, DateTime date, CancellationToken cancellationToken)
     {
         var municipality = await _municipalityRepository.GetMunicipalityByNameAsync(municipalityName, cancellationToken);

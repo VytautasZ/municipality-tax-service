@@ -23,6 +23,20 @@ public sealed class TaxRateRepository : ITaxRateRepository
         return taxRate;
     }
 
+    public async Task<bool> UpdateTaxRateAsync(long id, TaxRate taxRate, CancellationToken cancellationToken)
+    {
+        var affectedRows = await _dbContext.Set<TaxRate>()
+            .Where(existingTaxRate => existingTaxRate.Id == id)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(existingTaxRate => existingTaxRate.Rate, taxRate.Rate)
+                .SetProperty(existingTaxRate => existingTaxRate.StartDate, taxRate.StartDate)
+                .SetProperty(existingTaxRate => existingTaxRate.EndDate, taxRate.EndDate)
+                .SetProperty(existingTaxRate => existingTaxRate.UpdatedAt, DateTime.UtcNow),
+                cancellationToken);
+
+        return affectedRows > 0;
+    }
+
     public async Task<IReadOnlyList<TaxRate>> GetMunicipalityTaxRatesByDateAsync(long municipalityId, DateTime date, CancellationToken cancellationToken)
     {
         return await _dbContext.Set<TaxRate>()
