@@ -19,4 +19,11 @@ public static class InfrastructureConfiguration
         ServiceDbContext dbContext = scope.ServiceProvider.GetRequiredService<ServiceDbContext>();
         await dbContext.Database.MigrateAsync(cancellationToken);
     }
+
+    public static async Task SeedDatabaseAsync(this IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
+    {
+        using IServiceScope scope = serviceProvider.CreateScope();
+        ServiceDbContext dbContext = scope.ServiceProvider.GetRequiredService<ServiceDbContext>();
+        await DatabaseSeeder.SeedAsync(dbContext, cancellationToken);
+    }
 }

@@ -5,11 +5,10 @@ namespace MunicipalityTaxService.Api.Mappers;
 
 public static class MunicipalityMapper
 {
-    public static Municipality ToMunicipality(this MunicipalityDto dto)
+    public static Municipality ToMunicipality(this MunicipalityBaseDto dto)
     {
         return new Municipality
         {
-            Id = dto.Id,
             Name = dto.Name
         };
     }

@@ -31,5 +31,6 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 await app.Services.ApplyMigrationsAsync();
+await app.Services.SeedDatabaseAsync();
 
 app.Run();

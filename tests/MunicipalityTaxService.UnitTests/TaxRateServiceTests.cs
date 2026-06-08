@@ -179,4 +179,55 @@ public class TaxRateServiceTests
         Assert.True(result.IsFailure);
         Assert.Equal(ErrorType.NotFound, result.Error.Type);
     }
+
+    [Fact]
+    public async Task AddTaxRate_ReturnsValidation_WhenStartDateIsAfterEndDate()
+    {
+        var taxRate = new TaxRate
+        {
+            Type = TaxType.Yearly,
+            Rate = 0.2m,
+            StartDate = new DateTime(2024, 12, 31),
+            EndDate = new DateTime(2024, 1, 1)
+        };
+
+        var result = await _sut.AddTaxRateAsync(MunicipalityName, taxRate, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(ErrorType.Validation, result.Error.Type);
+    }
+
+    [Fact]
+    public async Task AddTaxRate_ReturnsValidation_WhenRateIsNegative()
+    {
+        var taxRate = new TaxRate
+        {
+            Type = TaxType.Yearly,
+            Rate = -0.1m,
+            StartDate = new DateTime(2024, 1, 1),
+            EndDate = new DateTime(2024, 12, 31)
+        };
+
+        var result = await _sut.AddTaxRateAsync(MunicipalityName, taxRate, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(ErrorType.Validation, result.Error.Type);
+    }
+
+    [Fact]
+    public async Task UpdateTaxRate_ReturnsValidation_WhenStartDateIsAfterEndDate()
+    {
+        var taxRate = new TaxRate
+        {
+            Type = TaxType.Yearly,
+            Rate = 0.2m,
+            StartDate = new DateTime(2024, 12, 31),
+            EndDate = new DateTime(2024, 1, 1)
+        };
+
+        var result = await _sut.UpdateTaxRateAsync(1, taxRate, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(ErrorType.Validation, result.Error.Type);
+    }
 }

@@ -62,7 +62,7 @@ public class MunicipalityTaxRatesController : ApiController
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TaxRateDto>> AddTaxRate(
         string name,
-        [FromBody] TaxRateDto taxRateDto,
+        [FromBody] TaxRateBaseDto taxRateDto,
         CancellationToken cancellationToken)
     {
         var result = await _taxRateService.AddTaxRateAsync(name, taxRateDto.ToTaxRate(), cancellationToken);
@@ -94,7 +94,6 @@ public class MunicipalityTaxRatesController : ApiController
         CancellationToken cancellationToken)
     {
         var result = await _taxRateService.UpdateTaxRateAsync(id, taxRateDto.ToTaxRate(), cancellationToken);
-
         return result.IsSuccess ? NoContent() : Problem(result.Error);
     }
 }
