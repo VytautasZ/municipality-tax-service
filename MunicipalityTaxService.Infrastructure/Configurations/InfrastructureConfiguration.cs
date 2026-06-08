@@ -9,6 +9,7 @@ public static class InfrastructureConfiguration
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.ConfigureDatabase(configuration);
+        services.AddRepositoryDependencies();
         return services;
     }
 

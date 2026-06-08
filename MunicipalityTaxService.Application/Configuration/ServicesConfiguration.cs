@@ -9,6 +9,7 @@ public static class ServicesConfiguration
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<ITaxRateService, TaxRateService>();
+        services.AddScoped<IMunicipalityService, MunicipalityService>();
         return services;
     }
 }

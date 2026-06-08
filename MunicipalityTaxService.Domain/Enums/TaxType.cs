@@ -7,8 +7,8 @@ namespace MunicipalityTaxService.Domain.Enums;
 /// </remarks>
 public enum TaxType
 {
-    Daily = 0,
-    Weekly = 1,
-    Monthly = 2,
-    Yearly = 3,
+    Daily = 1,
+    Weekly = 2,
+    Monthly = 3,
+    Yearly = 4
 }
