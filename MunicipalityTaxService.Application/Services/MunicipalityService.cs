@@ -16,6 +16,12 @@ public sealed class MunicipalityService : IMunicipalityService
 
     public async Task<OperationResult<Municipality>> AddMunicipalityAsync(Municipality municipality, CancellationToken cancellationToken)
     {
+        var existingMunicipality = await _municipalityRepository.GetMunicipalityByNameAsync(municipality.Name, cancellationToken);
+        if (existingMunicipality is not null)
+        {
+            return OperationResult.Failure<Municipality>(MunicipalityErrors.AlreadyExists(municipality.Name));
+        }
+
         var createdMunicipality = await _municipalityRepository.AddMunicipalityAsync(municipality, cancellationToken);
         return OperationResult.Success(createdMunicipality);
     }

@@ -9,4 +9,7 @@ public static class MunicipalityErrors
 
     public static Error NotFoundByName(string name) =>
         Error.NotFound("Municipality.NotFound", $"No municipality named '{name}' was found.");
+
+    public static Error AlreadyExists(string name) =>
+        Error.Conflict("Municipality.AlreadyExists", $"A municipality named '{name}' already exists.");
 }

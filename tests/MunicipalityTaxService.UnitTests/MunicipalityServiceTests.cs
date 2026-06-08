@@ -55,4 +55,18 @@ public class MunicipalityServiceTests
         Assert.True(result.IsSuccess);
         Assert.Equal(3, result.Value.Id);
     }
+
+    [Fact]
+    public async Task AddMunicipality_ReturnsConflict_WhenNameAlreadyExists()
+    {
+        var municipality = new Municipality { Name = "Copenhagen" };
+        _municipalityRepository
+            .GetMunicipalityByNameAsync("Copenhagen", Arg.Any<CancellationToken>())
+            .Returns(new Municipality { Id = 1, Name = "Copenhagen" });
+
+        var result = await _sut.AddMunicipalityAsync(municipality, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(ErrorType.Conflict, result.Error.Type);
+    }
 }

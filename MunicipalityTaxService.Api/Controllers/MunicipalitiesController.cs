@@ -31,7 +31,7 @@ public class MunicipalitiesController : ApiController
     [HttpPost]
     [ProducesResponseType<MunicipalityDto>(StatusCodes.Status201Created)]
     public async Task<ActionResult<MunicipalityDto>> AddMunicipality(
-        [FromBody] MunicipalityDto municipalityDto,
+        [FromBody] MunicipalityBaseDto municipalityDto,
         CancellationToken cancellationToken)
     {
         var result = await _municipalityService.AddMunicipalityAsync(municipalityDto.ToMunicipality(), cancellationToken);

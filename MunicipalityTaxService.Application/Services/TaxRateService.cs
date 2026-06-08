@@ -18,6 +18,12 @@ public sealed class TaxRateService : ITaxRateService
 
     public async Task<OperationResult<TaxRate>> AddTaxRateAsync(string municipalityName, TaxRate taxRate, CancellationToken cancellationToken)
     {
+        var validationError = ValidateTaxRate(taxRate);
+        if (validationError is not null)
+        {
+            return OperationResult.Failure<TaxRate>(validationError);
+        }
+
         var municipality = await _municipalityRepository.GetMunicipalityByNameAsync(municipalityName, cancellationToken);
         if (municipality is null)
         {
@@ -31,6 +37,12 @@ public sealed class TaxRateService : ITaxRateService
 
     public async Task<OperationResult> UpdateTaxRateAsync(long id, TaxRate taxRate, CancellationToken cancellationToken)
     {
+        var validationError = ValidateTaxRate(taxRate);
+        if (validationError is not null)
+        {
+            return OperationResult.Failure(validationError);
+        }
+
         var updated = await _taxRateRepository.UpdateTaxRateAsync(id, taxRate, cancellationToken);
 
         return updated
@@ -56,5 +68,20 @@ public sealed class TaxRateService : ITaxRateService
         return applicableTaxRate is not null
             ? OperationResult.Success(applicableTaxRate)
             : OperationResult.Failure<TaxRate>(TaxRateErrors.NotApplicable(municipalityName, date));
+    }
+
+    private static Error? ValidateTaxRate(TaxRate taxRate)
+    {
+        if (taxRate.StartDate > taxRate.EndDate)
+        {
+            return TaxRateErrors.InvalidDateRange;
+        }
+
+        if (taxRate.Rate < 0)
+        {
+            return TaxRateErrors.NegativeRate;
+        }
+
+        return null;
     }
 }
