@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using MunicipalityTaxService.Api;
 using MunicipalityTaxService.Application.Configuration;
 using MunicipalityTaxService.Infrastructure.Configurations;
 using Scalar.AspNetCore;
@@ -10,12 +11,15 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddOpenApi();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 app.MapOpenApi();
 app.MapScalarApiReference();

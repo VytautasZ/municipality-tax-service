@@ -1,5 +1,7 @@
+using MunicipalityTaxService.Application.Errors;
 using MunicipalityTaxService.Application.Interfaces;
 using MunicipalityTaxService.Domain.Entities;
+using MunicipalityTaxService.Shared;
 
 namespace MunicipalityTaxService.Application.Services;
 
@@ -12,13 +14,18 @@ public sealed class MunicipalityService : IMunicipalityService
         _municipalityRepository = municipalityRepository;
     }
 
-    public Task<Municipality> AddMunicipalityAsync(Municipality municipality, CancellationToken cancellationToken)
+    public async Task<OperationResult<Municipality>> AddMunicipalityAsync(Municipality municipality, CancellationToken cancellationToken)
     {
-        return _municipalityRepository.AddMunicipalityAsync(municipality, cancellationToken);
+        var createdMunicipality = await _municipalityRepository.AddMunicipalityAsync(municipality, cancellationToken);
+        return OperationResult.Success(createdMunicipality);
     }
 
-    public Task<Municipality?> GetMunicipalityByIdAsync(long id, CancellationToken cancellationToken)
+    public async Task<OperationResult<Municipality>> GetMunicipalityByIdAsync(long id, CancellationToken cancellationToken)
     {
-        return _municipalityRepository.GetMunicipalityByIdAsync(id, cancellationToken);
+        var municipality = await _municipalityRepository.GetMunicipalityByIdAsync(id, cancellationToken);
+
+        return municipality is not null
+            ? OperationResult.Success(municipality)
+            : OperationResult.Failure<Municipality>(MunicipalityErrors.NotFoundById(id));
     }
 }

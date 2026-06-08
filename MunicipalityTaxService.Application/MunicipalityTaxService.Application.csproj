@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MunicipalityTaxService.Domain\MunicipalityTaxService.Domain.csproj" />
+    <ProjectReference Include="..\MunicipalityTaxService.Shared\MunicipalityTaxService.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
