@@ -66,4 +66,27 @@ public class MunicipalityTaxRatesController : ControllerBase
         var createdTaxRate = await _taxRateService.AddTaxRateAsync(name, taxRateDto.ToTaxRate(), cancellationToken);
         return Ok(createdTaxRate);
     }
+
+    /// <summary>
+    /// Updates an existing tax rate.
+    /// </summary>
+    /// <param name="name">The municipality name (case-insensitive).</param>
+    /// <param name="id">The id of the tax rate to update.</param>
+    /// <param name="taxRateDto">The new tax rate values.</param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="204">The tax rate was updated.</response>
+    /// <response code="404">No tax rate with the given id exists.</response>
+    [HttpPut("{id:long}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateTaxRate(
+        string name,
+        long id,
+        [FromBody] TaxRateDto taxRateDto,
+        CancellationToken cancellationToken)
+    {
+        var updated = await _taxRateService.UpdateTaxRateAsync(id, taxRateDto.ToTaxRate(), cancellationToken);
+
+        return updated ? NoContent() : NotFound();
+    }
 }
