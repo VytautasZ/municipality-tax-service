@@ -14,19 +14,19 @@ public sealed class TaxRateService : ITaxRateService
         _taxRateRepository = taxRateRepository;
     }
 
-    public async Task<TaxRate?> GetMunicipalityTaxRateAsync(string municipalityName, DateTime date, CancellationToken cancellationToken)
+    public async Task<TaxRate?> GetMunicipalityTaxRateByDateAsync(string municipalityName, DateTime date, CancellationToken cancellationToken)
     {
-        Municipality? municipality = await _municipalityRepository.GetByNameAsync(municipalityName, cancellationToken);
+        var municipality = await _municipalityRepository.GetMunicipalityByNameAsync(municipalityName, cancellationToken);
         if (municipality is null)
         {
             return null;
         }
 
-        IReadOnlyList<TaxRate> validTaxRates = await _taxRateRepository.GetTaxRatesByMunicipalityIdAsync(municipality.Id, date, cancellationToken);
+        IReadOnlyList<TaxRate> validTaxRates = await _taxRateRepository.GetMunicipalityTaxRatesByDateAsync(municipality.Id, date, cancellationToken);
 
         return validTaxRates
             .OrderBy(taxRate => taxRate.Type)
-            .ThenByDescending(taxRate => taxRate.CreatedAt)
+            .ThenByDescending(taxRate => taxRate.CreatedAt) 
             .FirstOrDefault();
     }
 }

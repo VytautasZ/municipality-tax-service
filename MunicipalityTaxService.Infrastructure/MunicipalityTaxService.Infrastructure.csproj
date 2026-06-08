@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MunicipalityTaxService.Domain\MunicipalityTaxService.Domain.csproj" />
+    <ProjectReference Include="..\MunicipalityTaxService.Application\MunicipalityTaxService.Application.csproj" />
   </ItemGroup>
 
 </Project>

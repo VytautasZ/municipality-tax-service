@@ -13,8 +13,15 @@ namespace MunicipalityTaxService.Api.Controllers;
 [Route("api/municipalities/{name}/tax-rates")]
 [Produces(MediaTypeNames.Application.Json)]
 [Tags("Municipality Tax Rates")]
-public class MunicipalityTaxesController(ITaxRateService taxRateService) : ControllerBase
+public class MunicipalityTaxRatesController : ControllerBase
 {
+    private readonly ITaxRateService _taxRateService;
+
+    public MunicipalityTaxRatesController(ITaxRateService taxRateService)
+    {
+        _taxRateService = taxRateService;
+    }
+
     /// <summary>
     /// Gets the tax rate that applies to a municipality on a specific date by municipality name.
     /// </summary>
@@ -35,7 +42,7 @@ public class MunicipalityTaxesController(ITaxRateService taxRateService) : Contr
         [FromQuery] DateTime date,
         CancellationToken cancellationToken)
     {
-        var taxRate = await taxRateService.GetMunicipalityTaxRateAsync(name, date, cancellationToken);
+        var taxRate = await _taxRateService.GetMunicipalityTaxRateByDateAsync(name, date, cancellationToken);
 
         return taxRate is not null
             ? Ok(TaxRateMapper.ToDto(name, taxRate))
