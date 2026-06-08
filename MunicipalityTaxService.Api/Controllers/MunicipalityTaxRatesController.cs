@@ -7,13 +7,13 @@ using MunicipalityTaxService.Application.Interfaces;
 namespace MunicipalityTaxService.Api.Controllers;
 
 /// <summary>
-/// Endpoints for querying the tax rates that apply to a municipality.
+/// Endpoints for querying and managing the tax rates of a municipality.
 /// </summary>
 [ApiController]
 [Route("api/municipalities/{name}/tax-rates")]
 [Produces(MediaTypeNames.Application.Json)]
 [Tags("Municipality Tax Rates")]
-public class MunicipalityTaxRatesController : ControllerBase
+public class MunicipalityTaxRatesController : ApiController
 {
     private readonly ITaxRateService _taxRateService;
 
@@ -36,35 +36,43 @@ public class MunicipalityTaxRatesController : ControllerBase
     /// <response code="404">No tax rate is set for the municipality on the given date.</response>
     [HttpGet]
     [ProducesResponseType<TaxRateDto>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TaxRateDto>> GetApplicableTaxRate(
         string name,
         [FromQuery] DateTime date,
         CancellationToken cancellationToken)
     {
-        var taxRate = await _taxRateService.GetMunicipalityTaxRateByDateAsync(name, date, cancellationToken);
+        var result = await _taxRateService.GetMunicipalityTaxRateByDateAsync(name, date, cancellationToken);
 
-        return taxRate is not null
-            ? Ok(TaxRateMapper.ToDto(name, taxRate))
-            : NotFound();
+        return result.IsSuccess
+            ? Ok(TaxRateMapper.ToDto(name, result.Value))
+            : Problem(result.Error);
     }
 
     /// <summary>
-    /// Adds a tax rate for a municipality. The municipality is created if it does not yet exist.
+    /// Adds a tax rate for a municipality.
     /// </summary>
     /// <param name="name">The municipality name (case-insensitive).</param>
     /// <param name="taxRateDto">The tax rate to add.</param>
     /// <param name="cancellationToken"></param>
     /// <response code="201">The tax rate was created.</response>
+    /// <response code="404">No municipality with the given name exists.</response>
     [HttpPost]
     [ProducesResponseType<TaxRateDto>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TaxRateDto>> AddTaxRate(
         string name,
         [FromBody] TaxRateDto taxRateDto,
         CancellationToken cancellationToken)
     {
-        var createdTaxRate = await _taxRateService.AddTaxRateAsync(name, taxRateDto.ToTaxRate(), cancellationToken);
-        return Ok(createdTaxRate);
+        var result = await _taxRateService.AddTaxRateAsync(name, taxRateDto.ToTaxRate(), cancellationToken);
+        if (result.IsFailure)
+        {
+            return Problem(result.Error);
+        }
+
+        var createdTaxRate = result.Value;
+        return CreatedAtAction(nameof(GetApplicableTaxRate), new { name, date = createdTaxRate.StartDate }, TaxRateMapper.ToDto(name, createdTaxRate));
     }
 
     /// <summary>
@@ -78,15 +86,15 @@ public class MunicipalityTaxRatesController : ControllerBase
     /// <response code="404">No tax rate with the given id exists.</response>
     [HttpPut("{id:long}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateTaxRate(
         string name,
         long id,
         [FromBody] TaxRateDto taxRateDto,
         CancellationToken cancellationToken)
     {
-        var updated = await _taxRateService.UpdateTaxRateAsync(id, taxRateDto.ToTaxRate(), cancellationToken);
+        var result = await _taxRateService.UpdateTaxRateAsync(id, taxRateDto.ToTaxRate(), cancellationToken);
 
-        return updated ? NoContent() : NotFound();
+        return result.IsSuccess ? NoContent() : Problem(result.Error);
     }
 }

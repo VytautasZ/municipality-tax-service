@@ -8,4 +8,5 @@
   </Project>
   <Project Path="MunicipalityTaxService.Api/MunicipalityTaxService.Api.csproj" />
   <Project Path="MunicipalityTaxService.Infrastructure/MunicipalityTaxService.Infrastructure.csproj" />
+  <Project Path="MunicipalityTaxService.Shared/MunicipalityTaxService.Shared.csproj" />
 </Solution>

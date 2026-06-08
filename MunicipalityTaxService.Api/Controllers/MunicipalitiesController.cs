@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MunicipalityTaxService.Api.Dtos;
 using MunicipalityTaxService.Api.Mappers;
 using MunicipalityTaxService.Application.Interfaces;
-using MunicipalityTaxService.Domain.Entities;
 
 namespace MunicipalityTaxService.Api.Controllers;
 
@@ -14,7 +13,7 @@ namespace MunicipalityTaxService.Api.Controllers;
 [Route("api/municipalities")]
 [Produces(MediaTypeNames.Application.Json)]
 [Tags("Municipalities")]
-public class MunicipalitiesController : ControllerBase
+public class MunicipalitiesController : ApiController
 {
     private readonly IMunicipalityService _municipalityService;
 
@@ -26,7 +25,7 @@ public class MunicipalitiesController : ControllerBase
     /// <summary>
     /// Adds a new municipality.
     /// </summary>
-    /// <param name="request">The municipality to add.</param>
+    /// <param name="municipalityDto">The municipality to add.</param>
     /// <param name="cancellationToken"></param>
     /// <response code="201">The municipality was created.</response>
     [HttpPost]
@@ -35,8 +34,13 @@ public class MunicipalitiesController : ControllerBase
         [FromBody] MunicipalityDto municipalityDto,
         CancellationToken cancellationToken)
     {
-        var createdMunicipality = await _municipalityService.AddMunicipalityAsync(municipalityDto.ToMunicipality(), cancellationToken);
+        var result = await _municipalityService.AddMunicipalityAsync(municipalityDto.ToMunicipality(), cancellationToken);
+        if (result.IsFailure)
+        {
+            return Problem(result.Error);
+        }
 
+        var createdMunicipality = result.Value;
         return CreatedAtAction(nameof(GetMunicipality), new { id = createdMunicipality.Id }, createdMunicipality.ToMunicipalityDto());
     }
 
@@ -49,15 +53,15 @@ public class MunicipalitiesController : ControllerBase
     /// <response code="404">No municipality with the given id exists.</response>
     [HttpGet("{id:long}")]
     [ProducesResponseType<MunicipalityDto>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<MunicipalityDto>> GetMunicipality(
         long id,
         CancellationToken cancellationToken)
     {
-        var municipality = await _municipalityService.GetMunicipalityByIdAsync(id, cancellationToken);
+        var result = await _municipalityService.GetMunicipalityByIdAsync(id, cancellationToken);
 
-        return municipality is not null
-            ? Ok(municipality.ToMunicipalityDto())
-            : NotFound();
+        return result.IsSuccess
+            ? Ok(result.Value.ToMunicipalityDto())
+            : Problem(result.Error);
     }
 }

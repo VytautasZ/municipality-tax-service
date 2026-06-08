@@ -1,10 +1,11 @@
 using MunicipalityTaxService.Domain.Entities;
+using MunicipalityTaxService.Shared;
 
 namespace MunicipalityTaxService.Application.Interfaces;
 
 public interface IMunicipalityService
 {
-    Task<Municipality> AddMunicipalityAsync(Municipality municipality, CancellationToken cancellationToken);
+    Task<OperationResult<Municipality>> AddMunicipalityAsync(Municipality municipality, CancellationToken cancellationToken);
 
-    Task<Municipality?> GetMunicipalityByIdAsync(long id, CancellationToken cancellationToken);
+    Task<OperationResult<Municipality>> GetMunicipalityByIdAsync(long id, CancellationToken cancellationToken);
 }
