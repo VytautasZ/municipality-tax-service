@@ -2,7 +2,6 @@ using MunicipalityTaxService.Application.Interfaces;
 using MunicipalityTaxService.Application.Services;
 using MunicipalityTaxService.Domain.Entities;
 using MunicipalityTaxService.Domain.Enums;
-using MunicipalityTaxService.Infrastructure.Repositories;
 using MunicipalityTaxService.Shared;
 using NSubstitute;
 

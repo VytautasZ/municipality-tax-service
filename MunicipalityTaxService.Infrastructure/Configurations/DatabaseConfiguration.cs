@@ -10,7 +10,8 @@ internal static class DatabaseConfiguration
     {
         string? connectionString = configuration.GetConnectionString(Db.MunicipalityTax.CONNECTION_STRING_NAME);
         services.AddDbContext<ServiceDbContext>(options => options.UseSqlServer(connectionString,
-            sql => sql.MigrationsHistoryTable("_MigrationHistory", Db.MunicipalityTax.SCHEMA)));
+            sql => sql.MigrationsHistoryTable("_MigrationHistory", Db.MunicipalityTax.SCHEMA)
+                      .EnableRetryOnFailure()));
         return services;
     }
 }
