@@ -5,6 +5,17 @@ namespace MunicipalityTaxService.Api.Mappers;
 
 public static class TaxRateMapper
 {
+    public static TaxRate ToTaxRate(this TaxRateDto dto)
+    {
+        return new TaxRate
+        {
+            Type = dto.Type,
+            Rate = dto.Rate,
+            StartDate = dto.StartDate,
+            EndDate = dto.EndDate
+        };
+    }
+
     public static TaxRateDto ToDto(string municipalityName, TaxRate taxRate)
     {
         return new()
