@@ -4,5 +4,7 @@ namespace MunicipalityTaxService.Application.Interfaces;
 
 public interface ITaxRateService
 {
+    Task<TaxRate> AddTaxRateAsync(string municipalityName, TaxRate taxRate, CancellationToken cancellationToken);
+
     Task<TaxRate?> GetMunicipalityTaxRateByDateAsync(string municipalityName, DateTime date, CancellationToken cancellationToken);
 }

@@ -6,7 +6,7 @@ public class TaxRateDto
 {
     public long Id { get; set; }
 
-    public required string MunicipalityName { get; set; }
+    public string MunicipalityName { get; set; } = string.Empty;
 
     public TaxType Type { get; set; }
 

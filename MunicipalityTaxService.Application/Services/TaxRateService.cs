@@ -14,6 +14,13 @@ public sealed class TaxRateService : ITaxRateService
         _taxRateRepository = taxRateRepository;
     }
 
+    public async Task<TaxRate> AddTaxRateAsync(string municipalityName, TaxRate taxRate, CancellationToken cancellationToken)
+    {
+        var municipality = await _municipalityRepository.GetMunicipalityByNameAsync(municipalityName, cancellationToken);
+        taxRate.MunicipalityId = municipality.Id;
+        return await _taxRateRepository.AddTaxRateAsync(taxRate, cancellationToken);
+    }
+
     public async Task<TaxRate?> GetMunicipalityTaxRateByDateAsync(string municipalityName, DateTime date, CancellationToken cancellationToken)
     {
         var municipality = await _municipalityRepository.GetMunicipalityByNameAsync(municipalityName, cancellationToken);

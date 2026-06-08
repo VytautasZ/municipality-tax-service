@@ -48,4 +48,22 @@ public class MunicipalityTaxRatesController : ControllerBase
             ? Ok(TaxRateMapper.ToDto(name, taxRate))
             : NotFound();
     }
+
+    /// <summary>
+    /// Adds a tax rate for a municipality. The municipality is created if it does not yet exist.
+    /// </summary>
+    /// <param name="name">The municipality name (case-insensitive).</param>
+    /// <param name="taxRateDto">The tax rate to add.</param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="201">The tax rate was created.</response>
+    [HttpPost]
+    [ProducesResponseType<TaxRateDto>(StatusCodes.Status201Created)]
+    public async Task<ActionResult<TaxRateDto>> AddTaxRate(
+        string name,
+        [FromBody] TaxRateDto taxRateDto,
+        CancellationToken cancellationToken)
+    {
+        var createdTaxRate = await _taxRateService.AddTaxRateAsync(name, taxRateDto.ToTaxRate(), cancellationToken);
+        return Ok(createdTaxRate);
+    }
 }
