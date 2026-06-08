@@ -11,6 +11,7 @@ public sealed class TaxRateRepository : ITaxRateRepository
     public TaxRateRepository(ServiceDbContext dbContext)
     {
         _dbContext = dbContext;
+        _dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
 
     public async Task<TaxRate> AddTaxRateAsync(TaxRate taxRate, CancellationToken cancellationToken)

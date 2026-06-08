@@ -3,10 +3,10 @@
     <Project Path="tests/MunicipalityTaxService.UnitTests/MunicipalityTaxService.UnitTests.csproj" />
   </Folder>
   <Project Path="MunicipalityTaxService.Application/MunicipalityTaxService.Application.csproj" />
-  <Project Path="MunicipalityTaxService.Domain/MunicipalityTaxService.Domain.csproj">
-    <Build Solution="Debug|*" Project="false" />
-  </Project>
+  <Project Path="MunicipalityTaxService.Domain/MunicipalityTaxService.Domain.csproj" />
   <Project Path="MunicipalityTaxService.Api/MunicipalityTaxService.Api.csproj" />
   <Project Path="MunicipalityTaxService.Infrastructure/MunicipalityTaxService.Infrastructure.csproj" />
   <Project Path="MunicipalityTaxService.Shared/MunicipalityTaxService.Shared.csproj" />
+  <Project Path="MunicipalityTaxService.AppHost/MunicipalityTaxService.AppHost.csproj" />
+  <Project Path="MunicipalityTaxService.ServiceDefaults/MunicipalityTaxService.ServiceDefaults.csproj" />
 </Solution>
