@@ -1,0 +1,36 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: municipality-tax-db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=@test123
+      - MSSQL_PID=Developer
+    ports:
+      - "1445:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "@test123", "-Q", "SELECT 1", "-C"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  api:
+    image: municipality-tax-api:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: municipality-tax-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__MunicipalityTaxDbString=Server=db;Database=municipality-taxes;User Id=sa;Password=@test123;TrustServerCertificate=True
+    ports:
+      - "5005:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mssql-data:
